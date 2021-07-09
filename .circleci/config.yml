@@ -11,6 +11,10 @@ jobs:
           name: install dependencies
           command: |
             apk add --no-cache git make bash wget python3-dev build-base
+            curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz \
+                && tar xzvf docker-17.04.0-ce.tgz \
+                && mv docker/docker /usr/local/bin \
+                && rm -r docker docker-17.04.0-ce.tgz
       - run:
           name: lint code 
           command: |
@@ -18,8 +22,6 @@ jobs:
             source ~/.devops/bin/activate
             pip install --upgrade pip
             pip install typed_ast
-            pip install docker
-            pip install make
             pip install pylint
             make install
             make lint
