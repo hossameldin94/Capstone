@@ -1,0 +1,33 @@
+version: 2.1
+
+jobs:
+
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install tar utility
+          command: |
+            yum install -y tar gzip
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=circleci-${CIRCLE_WORKFLOW_ID:0:7} \
+               --stack-name "backendstack-${CIRCLE_WORKFLOW_ID:0:7}" \
+               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
+      - run:
+          name: Add back-end ip text file
+          command: |
+            EIP=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`EIP-${CIRCLE_WORKFLOW_ID:0:7}\`].Value" \
+              --no-paginate --output text)
+            echo $EIP
+            echo $EIP >> .circleci/ansible/backendIP.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/backendIP.txt
