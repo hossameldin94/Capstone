@@ -1,6 +1,24 @@
 version: 2.1
 
 jobs:
+  
+  build-pushDocker:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: lint code 
+          command: |
+            make setup
+            source ~/.devops/bin/activate
+            make install
+            make lint
+      - run:
+          name: build docker and push it
+          command: |
+            docker build --tag=capstone .
+            ./upload_docker.sh
 
   deploy-infrastructure:
     docker:
@@ -31,3 +49,11 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/backendIP.txt
+            
+workflows:
+  default:
+    jobs:
+      - build-pushDocker:
+          context: udapeople
+      - deploy-infrastructure:
+          context: udapeople
