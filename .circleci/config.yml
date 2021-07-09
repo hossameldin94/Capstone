@@ -12,6 +12,7 @@ jobs:
           command: |
             pip install docker
             pip install make
+            sudo apt-get install build-essential
       - run:
           name: lint code 
           command: |
