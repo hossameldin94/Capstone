@@ -86,8 +86,9 @@ jobs:
       - run:
           name: check file
           command: |
-            cat /home/circleci/deployment.yml
             ls /home/circleci/
+            cat /home/circleci/deployment.yml
+            
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: /home/circleci/deployment.yml
