@@ -86,6 +86,24 @@ jobs:
           resource-file-path: deployment.yaml
           resource-name: deployment/capstone
           show-kubectl-command: true
+          
+  test-deployment:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - run:
+          name: test deployment
+          command: |
+            kubectl get svc
+            kubectl get nodes
+            kubectl get deployment
     
             
 workflows:
@@ -105,5 +123,10 @@ workflows:
           requires: [deploy-infrastructure]
       - create-deployment:
           cluster-name: capstone
+          context: udapeople
           requires:
             - aws-eks/create-cluster
+      - test-deployment:
+          cluster-name: capstone
+          context: udapeople
+          requires: [create-deployment]
