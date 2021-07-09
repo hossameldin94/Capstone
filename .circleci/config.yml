@@ -2,7 +2,7 @@ version: 2.1
 
 jobs:
   
-  build-pushDocker:
+  lint-code:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -10,11 +10,8 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            apk add --no-cache git make bash wget python3-dev build-base curl tar gzip docker openrc
-            apk update
-            rc-update add docker boot
+            apk add --no-cache git make bash wget python3-dev build-base curl tar gzip 
             
-            service docker status
       - run:
           name: lint code 
           command: |
@@ -25,9 +22,18 @@ jobs:
             pip install pylint
             make install
             make lint
+            
+            
+  build-pushDocker:
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
       - run:
           name: build docker and push it
           command: |
+            make setup
+            source ~/.devops/bin/activate
             docker build --tag=capstone .
             ./upload_docker.sh
 
