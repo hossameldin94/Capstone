@@ -32,6 +32,7 @@ jobs:
       - run:
           name: build docker and push it
           command: |
+            apk add --no-cache git make bash wget python3-dev build-base curl tar gzip
             make setup
             source ~/.devops/bin/activate
             docker build --tag=capstone .
@@ -70,8 +71,11 @@ jobs:
 workflows:
   default:
     jobs:
+      - lint-code:
+          context: udapeople
       - build-pushDocker:
           context: udapeople
+          requires: [lint-code]
       - deploy-infrastructure:
           context: udapeople
           requires: [build-pushDocker]
