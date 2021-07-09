@@ -10,15 +10,14 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install docker
-            pip install make
-            pip install pylint
             apk add --no-cache git make bash wget
       - run:
           name: lint code 
           command: |
             make setup
             source ~/.devops/bin/activate
+            pip install --upgrade pip
+            pip install typed_ast
             pip install docker
             pip install make
             pip install pylint
