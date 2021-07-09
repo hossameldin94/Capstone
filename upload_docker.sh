@@ -11,7 +11,7 @@ dockerpath=hossameldin94/capstone
 # Authenticate & tag
 docker image tag capstone $dockerpath
 
-cat ~/pass.txt | docker login --username hossameldin94 --password-stdin
+cat pass.txt | docker login --username hossameldin94 --password-stdin
 
 echo "Docker ID and Image: $dockerpath"
 
