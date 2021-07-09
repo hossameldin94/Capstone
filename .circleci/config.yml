@@ -12,7 +12,7 @@ jobs:
           command: |
             pip install docker
             pip install make
-            apk add --no-cache git make bash
+            apk add --no-cache git make bash wget
       - run:
           name: lint code 
           command: |
