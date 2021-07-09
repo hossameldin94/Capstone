@@ -81,6 +81,7 @@ jobs:
     steps:
       - checkout
       - kubernetes/install-kubectl
+      - aws-eks/install-aws-iam-authenticator
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: deployment.yaml
@@ -109,23 +110,23 @@ jobs:
 workflows:
   default:
     jobs:
-      - lint-code:
-          context: udapeople
-      - build-pushDocker:
-          context: udapeople
-          requires: [lint-code]
-      - deploy-infrastructure:
-          context: udapeople
-          requires: [build-pushDocker]
-      - aws-eks/create-cluster:
-          cluster-name: capstone
-          context: udapeople
-          requires: [deploy-infrastructure]
+      #- lint-code:
+      #    context: udapeople
+      #- build-pushDocker:
+       #   context: udapeople
+        #  requires: [lint-code]
+      #- deploy-infrastructure:
+        #  context: udapeople
+       #   requires: [build-pushDocker]
+      #- aws-eks/create-cluster:
+        #  cluster-name: capstone
+       #   context: udapeople
+      #    requires: [deploy-infrastructure]
       - create-deployment:
           cluster-name: capstone
           context: udapeople
-          requires:
-            - aws-eks/create-cluster
+          #requires:
+           # - aws-eks/create-cluster
       - test-deployment:
           cluster-name: capstone
           context: udapeople
