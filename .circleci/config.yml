@@ -1,5 +1,9 @@
 version: 2.1
 
+orbs:
+  aws-eks: circleci/aws-eks@x.y
+  kubernetes: circleci/kubernetes@0.4.0
+
 jobs:
   
   lint-code:
@@ -61,11 +65,28 @@ jobs:
               list-exports --query "Exports[?Name==\`EIP-${CIRCLE_WORKFLOW_ID:0:7}\`].Value" \
               --no-paginate --output text)
             echo $EIP
-            echo $EIP >> .circleci/ansible/backendIP.txt
+            echo $EIP >> .circleci/backendIP.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/backendIP.txt
+            - project/.circleci/backendIP.txt
+    
+  create-deployment:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - checkout
+      - kubernetes/install-kubectl
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: deployment.yaml
+          resource-name: deployment/capstone
+          show-kubectl-command: true
+    
             
 workflows:
   default:
@@ -78,3 +99,9 @@ workflows:
       - deploy-infrastructure:
           context: udapeople
           requires: [build-pushDocker]
+      - aws-eks/create-cluster:
+          cluster-name: capstone
+      - create-deployment:
+          cluster-name: capstone
+          requires:
+            - aws-eks/create-cluster
