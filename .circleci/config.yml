@@ -101,6 +101,7 @@ workflows:
           requires: [build-pushDocker]
       - aws-eks/create-cluster:
           cluster-name: capstone
+          context: udapeople
       - create-deployment:
           cluster-name: capstone
           requires:
