@@ -12,6 +12,7 @@ jobs:
           command: |
             pip install docker
             pip install make
+            pip install pylint
             apk add --no-cache git make bash wget
       - run:
           name: lint code 
