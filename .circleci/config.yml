@@ -12,7 +12,7 @@ jobs:
           command: |
             pip install docker
             pip install make
-            sudo apt-get install build-essential
+            apk add --no-cache git make bash
       - run:
           name: lint code 
           command: |
