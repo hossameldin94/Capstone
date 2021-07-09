@@ -10,12 +10,13 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            apk add --no-cache git make bash wget python3-dev build-base curl tar gzip
+            apk add --no-cache git make bash wget python3-dev build-base curl tar gzip docker
             curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz \
                 && tar xzvf docker-17.04.0-ce.tgz \
                 && mv docker/docker /usr/local/bin \
                 && rm -r docker docker-17.04.0-ce.tgz
-            systemctl start docker
+            service docker start
+            service docker status
       - run:
           name: lint code 
           command: |
