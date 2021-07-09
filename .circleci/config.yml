@@ -19,6 +19,9 @@ jobs:
           command: |
             make setup
             source ~/.devops/bin/activate
+            pip install docker
+            pip install make
+            pip install pylint
             make install
             make lint
       - run:
