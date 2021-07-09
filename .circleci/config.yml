@@ -4,7 +4,7 @@ jobs:
   
   build-pushDocker:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - run:
@@ -57,3 +57,4 @@ workflows:
           context: udapeople
       - deploy-infrastructure:
           context: udapeople
+          requires: [build-pushDocker]
