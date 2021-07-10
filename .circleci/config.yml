@@ -92,7 +92,7 @@ jobs:
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: /home/circleci/project/deployment.yml
-          resource-name: deployment/capstone123
+          resource-name: deployment/capstone
           show-kubectl-command: true
           
   test-deployment:
@@ -123,15 +123,15 @@ workflows:
           context: udapeople
           requires: [lint-code]
       - aws-eks/create-cluster:
-          cluster-name: capstone123
+          cluster-name: capstone
           context: udapeople
           requires: [build-pushDocker]
       - create-deployment:
-          cluster-name: capstone123
+          cluster-name: capstone
           context: udapeople
           requires:
             - aws-eks/create-cluster
       - test-deployment:
-          cluster-name: capstone123
+          cluster-name: capstone
           context: udapeople
           requires: [create-deployment]
