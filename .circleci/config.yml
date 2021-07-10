@@ -122,13 +122,10 @@ workflows:
       - build-pushDocker:
           context: udapeople
           requires: [lint-code]
-      - deploy-infrastructure:
-          context: udapeople
-          requires: [build-pushDocker]
       - aws-eks/create-cluster:
           cluster-name: capstone
           context: udapeople
-          requires: [deploy-infrastructure]
+          requires: [deploy-pushDocker]
       - create-deployment:
           cluster-name: capstone
           context: udapeople
